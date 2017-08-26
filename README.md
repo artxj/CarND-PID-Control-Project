@@ -3,6 +3,33 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Rubric
+
+### PID Controller components
+
+
+* **P (proportional) component.**
+The component commands the car to turn in the direction opposite to the given error. If only P component is set, car will try to stay along given track. But it overshoots easily, so the oscillations appear that can increase significantly with increasing the speed. Check [this video](./videos/no_d.mov) to see how car moves with only P component set.
+* **D (differential) component.**
+This component allows to smooth oscillations described previously. The higher is the value of the component, the steering angle of more value car tries to apply to reduce the differential error.
+* **I (integral) component.**
+The component reduces the error of systematic bias that can exist in the system. There is no systematic bias in the simulator, so setting the I component leads to larger error instead. Check [this video](./videos/i_added.mov) to see how car runs with I value set to 1.0.
+
+### Choosing the hyperparameters
+
+For choosing P, I, D components values the twiddle technique was used. Car was run in the simulator for 10000 'steps' and the resulted error was evaluated. Then the application restarted the simulator remotely and the next run with modified parameters was performed. It was repeated until time runs out or the sum of parameters difference values met the threshold. The twiddle code is located in `main.cpp` and can be run if `isSteerTwiddle` set to `true`.
+
+However, during tests of the resulted parameters live on the simulator it appears that the car oscillated quickly when the speed was increasing. To reduce the oscillations, P value was decreased to 0.5.
+
+I have also implemented a separate PID controller for speed. The similar technique was used to choose the hyperparameters of the one. However, more manual tuning of both steering and speed PID controllers components values was required to make it run safely. To run the code using both PID controllers, `useSpeedPID` in `main.cpp` should be set to `true`.
+
+### Results
+
+The results of steering wheel PID controller implementation can be found in [this video](./videos/lane.mov).
+
+When using both steering and speed PID controllers the car moves not so smooth as in previous case, but it sometimes reaches the speed up to almost 60mph. The video for this case can be found [here](./videos/speed_lane.mov).
+
+
 ## Dependencies
 
 * cmake >= 3.5
@@ -19,7 +46,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +60,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 ## Editor Settings
 
